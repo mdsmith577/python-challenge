@@ -10,14 +10,22 @@ election_csv = os.path.join("Resources", "election_data.csv")
 candidate_list = []
 
 
-# List to append and contain only "unique" candidates from total list
+# List to append csv row[0], "Voter ID"
+voter_id_list = []
+
+
+# List to append and only contain "unique" candidates from total list
 unique_candidate_list = []
 
 
-cand_one = 0
-cand_two = 0
-cand_thr = 0
-cand_fou = 0
+# List to append and only contain vote counts for each of the unique candidates.
+# As long, the index position of each count will correspond to the index
+# position of each unique candidate in unique_candidate_list
+unique_vote_count_list = []
+
+
+# List to append and only contain percentage of votes for each of the unique candidates
+unique_percent_list = []
 
 
 # Open csv, comma separated, header is present
@@ -27,6 +35,9 @@ with open(election_csv, newline="", encoding='utf-8') as csvfile:
 
     # For every row in csv file
     for row in csvreader:
+
+        # Add voter ID from csv to newly created and empty total list
+        voter_id_list.append(row[0])
 
         # Add candidates from csv to newly created and empty total list
         candidate_list.append(row[2])
@@ -46,40 +57,26 @@ for v in range(vote_count):
 candidate_count = int(len(unique_candidate_list))
 
 
-# TODO: need to write code that says, for 0 to 3.5 mil, if candidate in candidate list equals
-# candidate in unique candidate list, fro 0 to len(candidate count), append the voter id to a list,
-# get the len of that list, and place this number in the same index as the unique candidate in a
-# new list called candidate_votes_list
-# Then, this won't be specific to how many candidates are on the list - and if it changes, it will be
-# flexible and calculate for any number of candidates on the list.  Then to call these total counts of voters,
-# we can just use the parameter of the unique candidate index to iterate the candidate_votes_list
-# and return the total number
+# Create a list of unique candidate vote counts for each candidate in unique_candidate_list
+for u in range(candidate_count):
+    unique_vote_count = 0
+    for c in range(vote_count):
+        if candidate_list[int(c)] == unique_candidate_list[int(u)]:
+            unique_vote_count += 1
+    unique_vote_count_list.append(unique_vote_count)
 
 
-# TODO:
-for c in range(vote_count):
-    if candidate_list[int(c)] == unique_candidate_list[0]:
-        cand_one += 1
-    elif candidate_list[int(c)] == unique_candidate_list[1]:
-        cand_two += 1
-    elif candidate_list[int(c)] == unique_candidate_list[2]:
-        cand_thr += 1
-    else:
-        cand_fou += 1
+# Calculate and append unique vote percentage for each candidate in unique_candidate_list
+for x in range(candidate_count):
+    unique_percent = 0
+    unique_percent = (unique_vote_count_list[int(x)] / vote_count * 100)
+    unique_percent_list.append(unique_percent)
 
 
-can_one_per = cand_one / vote_count * 100
-can_two_per = cand_two / vote_count * 100
-can_thr_per = cand_thr / vote_count * 100
-can_fou_per = cand_fou / vote_count * 100
-
-
-largest = [can_one_per, can_two_per, can_thr_per, can_fou_per]
-
-
+# Determine name of winner
 for w in range(candidate_count):
-    if max(largest) == largest[w]:
-        winner = unique_candidate_list[w]
+    if max(unique_vote_count_list) == unique_vote_count_list[int(w)]:
+        winner = unique_candidate_list[int(w)]
 
 
 # Print Election Results in terminal
@@ -88,10 +85,8 @@ print("Election Results")
 print("----------------------------")
 print(f"Total Votes: {vote_count}")
 print("----------------------------")
-print(f"{unique_candidate_list[0]}: {round(can_one_per,3)}% ({cand_one})")
-print(f"{unique_candidate_list[1]}: {round(can_two_per,3)}% ({cand_two})")
-print(f"{unique_candidate_list[2]}: {round(can_thr_per,3)}% ({cand_thr})")
-print(f"{unique_candidate_list[3]}: {round(can_fou_per,3)}% ({cand_fou})")
+for p in range(candidate_count):
+    print(f"{unique_candidate_list[int(p)]}: {round(unique_percent_list[int(p)],3)}% ({unique_vote_count_list[int(p)]})")
 print("----------------------------")
 print(f"Winner: {winner}")
 print("----------------------------")
@@ -103,10 +98,8 @@ text_file.write("Election Results\n")
 text_file.write("----------------------------\n")
 text_file.write(f"Total Votes: {vote_count}\n")
 text_file.write("----------------------------\n")
-text_file.write(f"{unique_candidate_list[0]}: {round(can_one_per,3)}% ({cand_one})\n")
-text_file.write(f"{unique_candidate_list[1]}: {round(can_two_per,3)}% ({cand_two})\n")
-text_file.write(f"{unique_candidate_list[2]}: {round(can_thr_per,3)}% ({cand_thr})\n")
-text_file.write(f"{unique_candidate_list[3]}: {round(can_fou_per,3)}% ({cand_fou})\n")
+for z in range(candidate_count):
+    text_file.write(f"{unique_candidate_list[int(z)]}: {round(unique_percent_list[int(z)],3)}% ({unique_vote_count_list[int(z)]})\n")
 text_file.write("----------------------------\n")
 text_file.write(f"Winner: {winner}\n")
 text_file.write("----------------------------\n")
