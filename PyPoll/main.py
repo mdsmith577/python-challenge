@@ -1,5 +1,3 @@
-# The dataset is composed of three columns: `Voter ID`, `County`, and `Candidate`
-
 import os
 import csv
 
@@ -55,9 +53,12 @@ can_two_per = cand_two / vote_count * 100
 can_thr_per = cand_thr / vote_count * 100
 can_fou_per = cand_fou / vote_count * 100
 
+largest = [can_one_per, can_two_per, can_thr_per, can_fou_per]
 
-# index of largest in list
-largest_list = [can_one_per, can_two_per, can_thr_per, can_fou_per]
+for w in range(uniq_lenth):
+    if max(largest) == largest[w]:
+        winner = uniq_cand_list[w]
+
 
 
 print("")
@@ -70,5 +71,25 @@ print(f"{uniq_cand_list[1]}: {round(can_two_per,3)}% ({cand_two})")
 print(f"{uniq_cand_list[2]}: {round(can_thr_per,3)}% ({cand_thr})")
 print(f"{uniq_cand_list[3]}: {round(can_fou_per,3)}% ({cand_fou})")
 print("----------------------------")
-print(f"Winner: {uniq_cand_list[0]}")
+print(f"Winner: {winner}")
 print("----------------------------")
+
+
+text_file = open("Election Results.txt", "w")
+
+text_file.write("Election Results\n")
+text_file.write("----------------------------\n")
+text_file.write(f"Total Votes: {vote_count}\n")
+text_file.write("----------------------------\n")
+text_file.write(f"{uniq_cand_list[0]}: {round(can_one_per,3)}% ({cand_one})\n")
+text_file.write(f"{uniq_cand_list[1]}: {round(can_two_per,3)}% ({cand_two})\n")
+text_file.write(f"{uniq_cand_list[2]}: {round(can_thr_per,3)}% ({cand_thr})\n")
+text_file.write(f"{uniq_cand_list[3]}: {round(can_fou_per,3)}% ({cand_fou})\n")
+text_file.write("----------------------------\n")
+text_file.write(f"Winner: {winner}\n")
+text_file.write("----------------------------\n")
+
+text_file.close()
+
+print("")
+print("Process complete")
