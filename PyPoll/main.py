@@ -17,16 +17,13 @@ with open(election_csv, newline="", encoding='utf-8') as csvfile:
     header = next(csvreader)
 
     for row in csvreader:
-        
-        # Add voter id to list
-        vote_id_list.append(row[0])
 
         # Add candidates to list
         cand_list.append(row[2])
 
 
 # Get count of votes
-vote_count = int(len(vote_id_list))
+vote_count = int(len(cand_list))
 
 # Get unique list of candidates from total list
 for i in range(vote_count):
